@@ -18,7 +18,9 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Iris API",
     version=MODEL_VERSION,
-    lifespan=lifespan
+    lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 
