@@ -9,21 +9,24 @@ from app.schemas import (
 from app.model import ml_model, SPECIES, FEATURES, MODEL_VERSION
 
 
+# Load model on startup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     ml_model.load()
     yield
 
 
+# FastAPI app
 app = FastAPI(
-    title="Iris API",
+    title="Iris Classification API",
     version=MODEL_VERSION,
     lifespan=lifespan,
-    docs_url="/docs",
-    redoc_url="/redoc"
+    docs_url="/docs",       # Swagger UI
+    redoc_url="/redoc"      # ReDoc UI
 )
 
 
+# Root endpoint
 @app.get("/")
 def root():
     return {
@@ -32,6 +35,13 @@ def root():
     }
 
 
+# 🔥 DEBUG endpoint (IMPORTANT)
+@app.get("/check")
+def check():
+    return {"status": "new code deployed"}
+
+
+# Health check
 @app.get("/health", response_model=HealthResponse)
 def health():
     return {
@@ -41,6 +51,7 @@ def health():
     }
 
 
+# Model info
 @app.get("/model/info", response_model=ModelInfo)
 def model_info():
     return {
@@ -51,6 +62,7 @@ def model_info():
     }
 
 
+# Single prediction
 @app.post("/predict", response_model=PredictionResponse)
 def predict(features: IrisFeatures):
     if not ml_model.is_loaded:
@@ -63,10 +75,10 @@ def predict(features: IrisFeatures):
         features.petal_width
     ]
 
-    result = ml_model.predict(data)
-    return result
+    return ml_model.predict(data)
 
 
+# Batch prediction
 @app.post("/predict/batch", response_model=BatchResponse)
 def predict_batch(request: BatchRequest):
     if not ml_model.is_loaded:
