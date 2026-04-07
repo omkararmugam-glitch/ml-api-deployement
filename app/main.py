@@ -16,7 +16,6 @@ async def lifespan(app: FastAPI):
     yield
 
 
-# Create FastAPI app
 app = FastAPI(
     title="Iris Classification API",
     version=MODEL_VERSION,
@@ -26,22 +25,22 @@ app = FastAPI(
 )
 
 
-# Root endpoint
+# ROOT
 @app.get("/")
 def root():
     return {
-        "message": "NEW VERSION RUNNING",
+        "message": "FINAL VERSION WORKING",
         "version": MODEL_VERSION
     }
 
 
-# Debug endpoint (to confirm deployment)
+# DEBUG (IMPORTANT)
 @app.get("/check")
 def check():
     return {"status": "deployment successful"}
 
 
-# Health endpoint
+# HEALTH
 @app.get("/health", response_model=HealthResponse)
 def health():
     return {
@@ -51,7 +50,7 @@ def health():
     }
 
 
-# Model info
+# MODEL INFO
 @app.get("/model/info", response_model=ModelInfo)
 def model_info():
     return {
@@ -62,7 +61,7 @@ def model_info():
     }
 
 
-# Single prediction
+# SINGLE PREDICTION
 @app.post("/predict", response_model=PredictionResponse)
 def predict(features: IrisFeatures):
     if not ml_model.is_loaded:
@@ -78,7 +77,7 @@ def predict(features: IrisFeatures):
     return ml_model.predict(data)
 
 
-# Batch prediction
+# BATCH PREDICTION
 @app.post("/predict/batch", response_model=BatchResponse)
 def predict_batch(request: BatchRequest):
     if not ml_model.is_loaded:
