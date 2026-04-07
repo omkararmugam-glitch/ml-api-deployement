@@ -16,13 +16,13 @@ async def lifespan(app: FastAPI):
     yield
 
 
-# FastAPI app
+# Create FastAPI app
 app = FastAPI(
     title="Iris Classification API",
     version=MODEL_VERSION,
     lifespan=lifespan,
-    docs_url="/docs",       # Swagger UI
-    redoc_url="/redoc"      # ReDoc UI
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 
@@ -30,18 +30,18 @@ app = FastAPI(
 @app.get("/")
 def root():
     return {
-        "message": "Iris API running",
+        "message": "NEW VERSION RUNNING",
         "version": MODEL_VERSION
     }
 
 
-# 🔥 DEBUG endpoint (IMPORTANT)
+# Debug endpoint (to confirm deployment)
 @app.get("/check")
 def check():
-    return {"status": "new code deployed"}
+    return {"status": "deployment successful"}
 
 
-# Health check
+# Health endpoint
 @app.get("/health", response_model=HealthResponse)
 def health():
     return {
