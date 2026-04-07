@@ -7,27 +7,39 @@ from app.schemas import (
     HealthResponse, ModelInfo
 )
 
+
+# 🔥 Create FastAPI app with Swagger ENABLED
 app = FastAPI(
-    title="Iris API",
-    version=MODEL_VERSION
+    title="Iris Classification API",
+    version=MODEL_VERSION,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
 )
 
 
+# 🔹 Load model on startup
 @app.on_event("startup")
 def load_model():
     ml_model.load()
 
 
+# 🔹 Root
 @app.get("/")
 def root():
-    return {"message": "FINAL ML API WORKING"}
+    return {
+        "message": "FINAL ML API WORKING",
+        "version": MODEL_VERSION
+    }
 
 
+# 🔹 Debug
 @app.get("/check")
 def check():
     return {"status": "OK"}
 
 
+# 🔹 Health
 @app.get("/health", response_model=HealthResponse)
 def health():
     return {
@@ -37,6 +49,7 @@ def health():
     }
 
 
+# 🔹 Model Info
 @app.get("/model/info", response_model=ModelInfo)
 def model_info():
     return {
@@ -47,6 +60,7 @@ def model_info():
     }
 
 
+# 🔹 Single Prediction
 @app.post("/predict", response_model=PredictionResponse)
 def predict(features: IrisFeatures):
     if not ml_model.is_loaded:
@@ -62,6 +76,7 @@ def predict(features: IrisFeatures):
     return ml_model.predict(data)
 
 
+# 🔹 Batch Prediction
 @app.post("/predict/batch", response_model=BatchResponse)
 def predict_batch(request: BatchRequest):
     if not ml_model.is_loaded:
