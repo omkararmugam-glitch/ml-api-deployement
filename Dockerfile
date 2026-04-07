@@ -2,13 +2,12 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+# Copy everything first (IMPORTANT CHANGE)
+COPY . .
 
+# Install dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-
-COPY app/ ./app/
-COPY models/ ./models/
 
 EXPOSE 8000
 
