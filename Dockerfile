@@ -2,12 +2,10 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-# Copy everything (VERY IMPORTANT)
 COPY . .
 
-# Install dependencies
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install fastapi uvicorn
 
 EXPOSE 8000
 
